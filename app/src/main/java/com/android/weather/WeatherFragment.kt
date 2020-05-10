@@ -17,7 +17,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.weather.databinding.FragmentWeatherBinding
+import com.android.weather.network.GeoApi
 import com.google.android.gms.location.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 private const val LOCATION_PERMISSION_REQUEST = 1
 private const val LOCATION_PERMISSION = "android.permission.ACCESS_FINE_LOCATION"
@@ -50,6 +55,28 @@ class WeatherFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
+
+        loadWeatherAndUpdate()
+    }
+
+    private fun loadWeatherAndUpdate() {
+        // Launch Kotlin Coroutine on Android's main thread
+        GlobalScope.launch(Dispatchers.Main) {
+            // Execute web request through coroutine call adapter & retrofit
+            val webResponse = GeoApi.retrofitService.getGeo().await()
+
+            if (webResponse.isSuccessful) {
+                // Get the returned & parsed JSON from the web response.
+                // Type specified explicitly here to make it clear that we already
+                // get parsed contents.
+                val partList = webResponse.body()
+                print(partList?.city)
+                binding.myCityView.text = partList?.city
+            } else {
+                // Print error information
+                Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun checkPermissions(): Boolean {

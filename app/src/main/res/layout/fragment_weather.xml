@@ -7,7 +7,7 @@
     tools:context=".WeatherFragment">
 
     <TextView
-        android:id="@+id/myCordinatesView"
+        android:id="@+id/myCityView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_coordinates"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/latitudeView"
-        app:layout_constraintTop_toBottomOf="@+id/myCordinatesView" />
+        app:layout_constraintTop_toBottomOf="@+id/myCityView" />
 
     <Button
         android:id="@+id/getCoordinatesButton"
