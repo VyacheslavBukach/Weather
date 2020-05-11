@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
 private const val LOCATION_PERMISSION_REQUEST = 1
 private const val LOCATION_PERMISSION = "android.permission.ACCESS_FINE_LOCATION"
 
@@ -32,6 +31,9 @@ class WeatherFragment : Fragment() {
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
     lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,26 +57,27 @@ class WeatherFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
-
-        loadWeatherAndUpdate()
     }
 
     private fun loadWeatherAndUpdate() {
         // Launch Kotlin Coroutine on Android's main thread
         GlobalScope.launch(Dispatchers.Main) {
             // Execute web request through coroutine call adapter & retrofit
-            val webResponse = GeoApi.retrofitService.getGeo().await()
+            //val webResponse = GeoApi.retrofitService.getGeo().await()
 
-            if (webResponse.isSuccessful) {
+            val webResponseco = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
+                "f20ee5d768c40c7094c1380400bf5a58").await()
+           println(webResponseco.raw().toString())
+
+            if (webResponseco.isSuccessful) {
                 // Get the returned & parsed JSON from the web response.
                 // Type specified explicitly here to make it clear that we already
                 // get parsed contents.
-                val partList = webResponse.body()
-                print(partList?.city)
+                val partList = webResponseco.body()
                 binding.myCityView.text = partList?.city
             } else {
                 // Print error information
-                Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error ${webResponseco.code()}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -125,6 +128,9 @@ class WeatherFragment : Fragment() {
                     } else {
                         binding.latitudeView.text = location.latitude.toString()
                         binding.longitudeView.text = location.longitude.toString()
+                        latitude = location.latitude
+                        longitude = location.longitude
+                        loadWeatherAndUpdate()
                     }
                 }
             } else {

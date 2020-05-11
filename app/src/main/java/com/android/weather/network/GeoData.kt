@@ -7,7 +7,3 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class GeoData(
     @Json(name = "name") val city: String?) : Parcelable
-
-//@Parcelize
-//data class GeoData(
-//    @Json(name = "name") val city: String?) : Parcelable
