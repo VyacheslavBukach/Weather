@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.weather.databinding.FragmentWeatherBinding
 import com.android.weather.network.GeoApi
+import com.android.weather.network.Weather
 import com.google.android.gms.location.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -65,19 +66,33 @@ class WeatherFragment : Fragment() {
             // Execute web request through coroutine call adapter & retrofit
             //val webResponse = GeoApi.retrofitService.getGeo().await()
 
-            val webResponseco = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
+            val webResponsece = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
                 "f20ee5d768c40c7094c1380400bf5a58").await()
-           println(webResponseco.raw().toString())
 
-            if (webResponseco.isSuccessful) {
+           println(webResponsece.raw().toString())
+
+            if (webResponsece.isSuccessful) {
                 // Get the returned & parsed JSON from the web response.
                 // Type specified explicitly here to make it clear that we already
                 // get parsed contents.
-                val partList = webResponseco.body()
+                val partList = webResponsece.body()
+
+                val weather = partList?.weather
+                val main = partList?.main
+                val wind = partList?.wind
+
+                binding.desciptionView.text = weather?.get(0)?.desc
+                binding.temperatureView.text = main?.temperature?.round()
+                binding.temperatureFeelsLikeView.text = main?.temperature_feels_like?.round()
+                binding.pressureView.text = main?.pressure.toString()
+                binding.humidityView.text = main?.humidity.toString()
+                binding.speedView.text = wind?.speed.toString()
+                binding.gustView.text = wind?.gust.toString()
+
                 binding.myCityView.text = partList?.city
             } else {
                 // Print error information
-                Toast.makeText(context, "Error ${webResponseco.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error ${webResponsece.code()}", Toast.LENGTH_SHORT).show()
             }
         }
     }

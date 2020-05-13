@@ -20,11 +20,12 @@
         android:id="@+id/latitudeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="TextView"
         app:layout_constraintBaseline_toBaselineOf="@+id/longitudeView"
         app:layout_constraintEnd_toStartOf="@+id/longitudeView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/humidityView" />
 
     <TextView
         android:id="@+id/longitudeView"
@@ -46,4 +47,72 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/longitudeView" />
+
+    <TextView
+        android:id="@+id/temperatureView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/temperatureFeelsLikeView"
+        app:layout_constraintStart_toStartOf="@+id/temperatureFeelsLikeView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
+        android:id="@+id/temperatureFeelsLikeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/desciptionView"
+        app:layout_constraintStart_toStartOf="@+id/desciptionView"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureView" />
+
+    <TextView
+        android:id="@+id/desciptionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/pressureView"
+        app:layout_constraintStart_toStartOf="@+id/pressureView"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureFeelsLikeView" />
+
+    <TextView
+        android:id="@+id/pressureView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/humidityView"
+        app:layout_constraintStart_toStartOf="@+id/humidityView"
+        app:layout_constraintTop_toBottomOf="@+id/desciptionView" />
+
+    <TextView
+        android:id="@+id/humidityView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/speedView"
+        app:layout_constraintStart_toStartOf="@+id/speedView"
+        app:layout_constraintTop_toBottomOf="@+id/pressureView" />
+
+    <TextView
+        android:id="@+id/speedView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/gustView"
+        app:layout_constraintStart_toStartOf="@+id/gustView"
+        app:layout_constraintTop_toBottomOf="@+id/humidityView" />
+
+    <TextView
+        android:id="@+id/gustView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speedView"
+        tools:layout_editor_absoluteX="25dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

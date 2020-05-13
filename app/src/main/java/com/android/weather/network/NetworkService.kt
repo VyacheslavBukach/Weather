@@ -17,14 +17,14 @@ interface GeoApiInterface {
     @GET("/data/2.5/weather?q=Grodno&APPID=f20ee5d768c40c7094c1380400bf5a58")
     fun getGeo():
     // The Coroutine Call Adapter allows us to return a Deferred, a Job with a result
-            Deferred<Response<GeoData>>
+            Deferred<Response<GeoResponse>>
 
 //    https://api.openweathermap.org/data/2.5/weather?lat=53.67&lon=23.85&appid=f20ee5d768c40c7094c1380400bf5a58
     @GET("/data/2.5/weather")
     fun getWeatherByGps(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
-        @Query("APPID") appid: String): Deferred<Response<GeoData>>
+        @Query("APPID") appid: String): Deferred<Response<GeoResponse>>
 }
 
 private val moshi = Moshi.Builder()
