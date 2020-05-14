@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Weather</string>
 
-    <string name="my_coordinates">Мои координаты</string>
+    <string name="my_coordinates">Город</string>
     <string name="get_coordinates">Получить координаты</string>
+    <string name="temperature">%1$s°С</string>
+    <string name="temperature_feels_like">по ощущению %1$s°С</string>
+    <string name="description">Описание</string>
+    <string name="pressure">Давление %1$s мм рт.ст.</string>
+    <string name="humidity">Влажность %1$s%%</string>
+    <string name="speed">Скорость ветра %1$s м/с</string>
 </resources>

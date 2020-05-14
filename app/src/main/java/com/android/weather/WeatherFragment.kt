@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.weather.databinding.FragmentWeatherBinding
 import com.android.weather.network.GeoApi
-import com.android.weather.network.Weather
 import com.google.android.gms.location.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -66,33 +65,32 @@ class WeatherFragment : Fragment() {
             // Execute web request through coroutine call adapter & retrofit
             //val webResponse = GeoApi.retrofitService.getGeo().await()
 
-            val webResponsece = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
+            val webResponse = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
                 "f20ee5d768c40c7094c1380400bf5a58").await()
 
-           println(webResponsece.raw().toString())
+           println(webResponse.raw().toString())
 
-            if (webResponsece.isSuccessful) {
+            if (webResponse.isSuccessful) {
                 // Get the returned & parsed JSON from the web response.
                 // Type specified explicitly here to make it clear that we already
                 // get parsed contents.
-                val partList = webResponsece.body()
+                val partList = webResponse.body()
 
                 val weather = partList?.weather
                 val main = partList?.main
                 val wind = partList?.wind
 
                 binding.desciptionView.text = weather?.get(0)?.desc
-                binding.temperatureView.text = main?.temperature?.round()
-                binding.temperatureFeelsLikeView.text = main?.temperature_feels_like?.round()
-                binding.pressureView.text = main?.pressure.toString()
-                binding.humidityView.text = main?.humidity.toString()
-                binding.speedView.text = wind?.speed.toString()
-                binding.gustView.text = wind?.gust.toString()
+                binding.temperatureView.text = getString(R.string.temperature, main?.temperature?.celcius())
+                binding.temperatureFeelsLikeView.text = getString(R.string.temperature_feels_like, main?.temperature_feels_like?.celcius())
+                binding.pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
+                binding.humidityView.text = getString(R.string.humidity, main?.humidity?.noSignAfterDot())
+                binding.speedView.text = getString(R.string.speed, wind?.speed?.oneSignAfterDot())
 
                 binding.myCityView.text = partList?.city
             } else {
                 // Print error information
-                Toast.makeText(context, "Error ${webResponsece.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -141,8 +139,8 @@ class WeatherFragment : Fragment() {
                     if (location == null) {
                         requestNewLocationData()
                     } else {
-                        binding.latitudeView.text = location.latitude.toString()
-                        binding.longitudeView.text = location.longitude.toString()
+//                        binding.latitudeView.text = location.latitude.toString()
+//                        binding.longitudeView.text = location.longitude.toString()
                         latitude = location.latitude
                         longitude = location.longitude
                         loadWeatherAndUpdate()
@@ -176,8 +174,8 @@ class WeatherFragment : Fragment() {
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location = locationResult.lastLocation
-            binding.latitudeView.text = mLastLocation.latitude.toString()
-            binding.longitudeView.text = mLastLocation.longitude.toString()
+//            binding.latitudeView.text = mLastLocation.latitude.toString()
+//            binding.longitudeView.text = mLastLocation.longitude.toString()
         }
     }
 
