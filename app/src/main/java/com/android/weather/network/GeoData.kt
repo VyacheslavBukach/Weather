@@ -27,5 +27,6 @@ data class Main(
 
 @Parcelize
 data class Wind(
-    @Json(name = "speed") val speed: Double
+    @Json(name = "speed") val speed: Double,
+    @Json(name = "deg") val direction: Double?
 ) : Parcelable

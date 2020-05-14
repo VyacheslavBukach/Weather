@@ -85,9 +85,9 @@ class WeatherFragment : Fragment() {
                 binding.temperatureFeelsLikeView.text = getString(R.string.temperature_feels_like, main?.temperature_feels_like?.celcius())
                 binding.pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
                 binding.humidityView.text = getString(R.string.humidity, main?.humidity?.noSignAfterDot())
-                binding.speedView.text = getString(R.string.speed, wind?.speed?.oneSignAfterDot())
+                binding.speedView.text = getString(R.string.speed, wind?.speed?.oneSignAfterDot(), getString(wind?.direction?.findDirection()!!))
 
-                binding.myCityView.text = partList?.city
+                binding.myCityView.text = partList.city
             } else {
                 // Print error information
                 Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()

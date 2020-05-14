@@ -8,5 +8,14 @@
     <string name="description">Описание</string>
     <string name="pressure">Давление %1$s мм рт.ст.</string>
     <string name="humidity">Влажность %1$s%%</string>
-    <string name="speed">Скорость ветра %1$s м/с</string>
+    <string name="speed">Скорость ветра %1$s м/с %2$s</string>
+
+    <string name="north">С</string>
+    <string name="north_east">СВ</string>
+    <string name="east">В</string>
+    <string name="south_east">ЮВ</string>
+    <string name="south">Ю</string>
+    <string name="south_west">ЮЗ</string>
+    <string name="west">З</string>
+    <string name="north_west">СЗ</string>
 </resources>
