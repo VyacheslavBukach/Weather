@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/temperatureView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@string/my_coordinates" />
 
@@ -57,6 +59,7 @@
         android:id="@+id/desciptionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/getCoordinatesButton"
         app:layout_constraintEnd_toEndOf="@+id/humidityView"
         app:layout_constraintTop_toBottomOf="@+id/humidityView"
@@ -66,6 +69,7 @@
         android:id="@+id/pressureView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/getCoordinatesButton"
         app:layout_constraintStart_toStartOf="@+id/speedView"
         app:layout_constraintTop_toBottomOf="@+id/speedView"
@@ -76,9 +80,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/desciptionView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/temperatureFeelsLikeView"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="@string/humidity" />
 
     <TextView
@@ -86,9 +92,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/pressureView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/temperatureFeelsLikeView"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="@string/speed" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="@+id/myCityView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/myCityView"
+        tools:src="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

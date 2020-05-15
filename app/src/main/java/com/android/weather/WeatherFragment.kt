@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.weather.databinding.FragmentWeatherBinding
 import com.android.weather.network.GeoApi
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 
 private const val LOCATION_PERMISSION_REQUEST = 1
 private const val LOCATION_PERMISSION = "android.permission.ACCESS_FINE_LOCATION"
+private const val IMAGE_URL = "https://openweathermap.org/img/wn/"
 
 class WeatherFragment : Fragment() {
 
@@ -80,14 +82,29 @@ class WeatherFragment : Fragment() {
                 val main = partList?.main
                 val wind = partList?.wind
 
-                binding.desciptionView.text = weather?.get(0)?.desc
-                binding.temperatureView.text = getString(R.string.temperature, main?.temperature?.celcius())
-                binding.temperatureFeelsLikeView.text = getString(R.string.temperature_feels_like, main?.temperature_feels_like?.celcius())
-                binding.pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
-                binding.humidityView.text = getString(R.string.humidity, main?.humidity?.noSignAfterDot())
-                binding.speedView.text = getString(R.string.speed, wind?.speed?.oneSignAfterDot(), getString(wind?.direction?.findDirection()!!))
+                binding.apply {
+                    desciptionView.text = weather?.get(0)?.desc
+                    temperatureView.text =
+                        getString(R.string.temperature, main?.temperature?.celcius())
+                    temperatureFeelsLikeView.text =
+                        getString(
+                            R.string.temperature_feels_like,
+                            main?.temperature_feels_like?.celcius()
+                        )
+                    pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
+                    humidityView.text =
+                        getString(R.string.humidity, main?.humidity?.noSignAfterDot())
+                    speedView.text = getString(
+                        R.string.speed,
+                        wind?.speed?.oneSignAfterDot(),
+                        getString(wind?.direction?.findDirection()!!)
+                    )
+                    myCityView.text = partList.city
 
-                binding.myCityView.text = partList.city
+                    Glide.with(requireContext())
+                        .load("${IMAGE_URL}${weather?.get(0)?.icon}@2x.png")
+                        .into(imageView)
+                }
             } else {
                 // Print error information
                 Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()

@@ -14,7 +14,8 @@ data class GeoResponse(
 
 @Parcelize
 data class Weather(
-    @Json(name = "description") val desc: String
+    @Json(name = "description") val desc: String,
+    @Json(name = "icon") val icon: String
 ) : Parcelable
 
 @Parcelize
