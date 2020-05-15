@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 private const val LOCATION_PERMISSION_REQUEST = 1
 private const val LOCATION_PERMISSION = "android.permission.ACCESS_FINE_LOCATION"
 private const val IMAGE_URL = "https://openweathermap.org/img/wn/"
@@ -37,7 +38,8 @@ class WeatherFragment : Fragment() {
     var latitude: Double = 0.0
     var longitude: Double = 0.0
 
-    override fun onCreateView(inflater: LayoutInflater,
+    override fun onCreateView(
+        inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -67,54 +69,60 @@ class WeatherFragment : Fragment() {
             // Execute web request through coroutine call adapter & retrofit
             //val webResponse = GeoApi.retrofitService.getGeo().await()
 
-            val webResponse = GeoApi.retrofitService.getWeatherByGps(latitude, longitude,
-                "f20ee5d768c40c7094c1380400bf5a58").await()
+            try {
+                val webResponse = GeoApi.retrofitService.getWeatherByGps(
+                    latitude, longitude,
+                    "f20ee5d768c40c7094c1380400bf5a58"
+                ).await()
+                if (webResponse.isSuccessful) {
+                    // Get the returned & parsed JSON from the web response.
+                    // Type specified explicitly here to make it clear that we already
+                    // get parsed contents.
+                    val partList = webResponse.body()
 
-           println(webResponse.raw().toString())
+                    val weather = partList?.weather
+                    val main = partList?.main
+                    val wind = partList?.wind
 
-            if (webResponse.isSuccessful) {
-                // Get the returned & parsed JSON from the web response.
-                // Type specified explicitly here to make it clear that we already
-                // get parsed contents.
-                val partList = webResponse.body()
-
-                val weather = partList?.weather
-                val main = partList?.main
-                val wind = partList?.wind
-
-                binding.apply {
-                    desciptionView.text = weather?.get(0)?.desc
-                    temperatureView.text =
-                        getString(R.string.temperature, main?.temperature?.celcius())
-                    temperatureFeelsLikeView.text =
-                        getString(
-                            R.string.temperature_feels_like,
-                            main?.temperature_feels_like?.celcius()
+                    binding.apply {
+                        desciptionView.text = weather?.get(0)?.desc
+                        temperatureView.text =
+                            getString(R.string.temperature, main?.temperature?.celcius())
+                        temperatureFeelsLikeView.text =
+                            getString(
+                                R.string.temperature_feels_like,
+                                main?.temperature_feels_like?.celcius()
+                            )
+                        pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
+                        humidityView.text =
+                            getString(R.string.humidity, main?.humidity?.noSignAfterDot())
+                        speedView.text = getString(
+                            R.string.speed,
+                            wind?.speed?.oneSignAfterDot(),
+                            getString(wind?.direction?.findDirection()!!)
                         )
-                    pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
-                    humidityView.text =
-                        getString(R.string.humidity, main?.humidity?.noSignAfterDot())
-                    speedView.text = getString(
-                        R.string.speed,
-                        wind?.speed?.oneSignAfterDot(),
-                        getString(wind?.direction?.findDirection()!!)
-                    )
-                    myCityView.text = partList.city
+                        myCityView.text = partList.city
 
-                    Glide.with(requireContext())
-                        .load("${IMAGE_URL}${weather?.get(0)?.icon}@2x.png")
-                        .into(imageView)
+                        Glide.with(requireContext())
+                            .load("${IMAGE_URL}${weather?.get(0)?.icon}@2x.png")
+                            .into(imageView)
+                    }
+                } else {
+                    // Print error information
+                    Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } else {
-                // Print error information
-                Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT).show()
+            } catch (t: Throwable) {
+                Toast.makeText(context, "No connection", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private fun checkPermissions(): Boolean {
         if (ContextCompat.checkSelfPermission(requireContext(), LOCATION_PERMISSION)
-            == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             return true
         }
         return false
@@ -122,27 +130,34 @@ class WeatherFragment : Fragment() {
 
     private fun requestPermissions() {
         requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
             LOCATION_PERMISSION_REQUEST
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             LOCATION_PERMISSION_REQUEST ->
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Granted. Start getting the location information
 
-                }
-                else {
+                } else {
 
                 }
         }
     }
 
     private fun isLocationEnabled(): Boolean {
-        val locationManager: LocationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager: LocationManager =
+            context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
