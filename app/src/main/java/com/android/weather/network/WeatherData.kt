@@ -5,11 +5,17 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class GeoResponse(
+data class WeatherResponse(
     @Json(name = "weather") val weather: List<Weather>,
     @Json(name = "main") val main: Main,
     @Json(name = "wind") val wind: Wind,
     @Json(name = "name") val city: String
+): Parcelable
+
+@Parcelize
+data class ForecastResponse(
+    @Json(name = "list") val list: List<Day>,
+    @Json(name = "city") val city: City
 ): Parcelable
 
 @Parcelize
@@ -30,4 +36,17 @@ data class Main(
 data class Wind(
     @Json(name = "speed") val speed: Double,
     @Json(name = "deg") val direction: Double?
+) : Parcelable
+
+@Parcelize
+data class City(
+    @Json(name = "name") val city: String
+) : Parcelable
+
+@Parcelize
+data class Day(
+    @Json(name = "main") val main: List<Main>,
+    @Json(name = "weather") val weather: List<Weather>,
+    @Json(name = "wind") val wind: Wind,
+    @Json(name = "dt_txt") val daytime: String
 ) : Parcelable

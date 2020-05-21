@@ -8,7 +8,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.openweathermap.org"
@@ -17,7 +16,7 @@ interface GeoApiInterface {
     @GET("/data/2.5/weather?q=Grodno&APPID=f20ee5d768c40c7094c1380400bf5a58")
     fun getGeo():
     // The Coroutine Call Adapter allows us to return a Deferred, a Job with a result
-            Deferred<Response<GeoResponse>>
+            Deferred<Response<WeatherResponse>>
 
 //    https://api.openweathermap.org/data/2.5/weather?lat=53.67&lon=23.85&appid=f20ee5d768c40c7094c1380400bf5a58
     @GET("/data/2.5/weather")
@@ -26,7 +25,15 @@ interface GeoApiInterface {
         @Query("lon") longitude: Double,
         @Query("units") format: String,
         @Query("lang") language: String,
-        @Query("APPID") appid: String): Deferred<Response<GeoResponse>>
+        @Query("APPID") appid: String): Deferred<Response<WeatherResponse>>
+
+    @GET("/data/2.5/forecast")
+    fun getForecastByGps(
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
+        @Query("units") format: String,
+        @Query("lang") language: String,
+        @Query("APPID") appid: String): Deferred<Response<WeatherResponse>>
 }
 
 private val moshi = Moshi.Builder()
