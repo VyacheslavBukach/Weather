@@ -71,7 +71,9 @@ class WeatherFragment : Fragment() {
 
             try {
                 val webResponse = GeoApi.retrofitService.getWeatherByGps(
-                    latitude, longitude, "ru",
+                    latitude, longitude,
+                    "metric",
+                    "ru",
                     "f20ee5d768c40c7094c1380400bf5a58"
                 ).await()
                 if (webResponse.isSuccessful) {
@@ -87,11 +89,11 @@ class WeatherFragment : Fragment() {
                     binding.apply {
                         desciptionView.text = weather?.get(0)?.desc
                         temperatureView.text =
-                            getString(R.string.temperature, main?.temperature?.celcius())
+                            getString(R.string.temperature, main?.temperature?.oneSignAfterDot())
                         temperatureFeelsLikeView.text =
                             getString(
                                 R.string.temperature_feels_like,
-                                main?.temperature_feels_like?.celcius()
+                                main?.temperature_feels_like?.oneSignAfterDot()
                             )
                         pressureView.text = getString(R.string.pressure, main?.pressure?.mmHg())
                         humidityView.text =
