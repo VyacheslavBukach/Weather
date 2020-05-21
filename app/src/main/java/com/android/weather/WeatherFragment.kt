@@ -148,7 +148,7 @@ class WeatherFragment : Fragment() {
             LOCATION_PERMISSION_REQUEST ->
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Granted. Start getting the location information
-
+                    getLastLocation()
                 } else {
 
                 }
