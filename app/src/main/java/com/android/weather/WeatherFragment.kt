@@ -71,7 +71,7 @@ class WeatherFragment : Fragment() {
 
             try {
                 val webResponse = GeoApi.retrofitService.getWeatherByGps(
-                    latitude, longitude,
+                    latitude, longitude, "ru",
                     "f20ee5d768c40c7094c1380400bf5a58"
                 ).await()
                 if (webResponse.isSuccessful) {
