@@ -1,4 +1,4 @@
-package com.android.weather
+package com.android.weather.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.android.weather.*
 import com.android.weather.databinding.FragmentWeatherBinding
 import com.android.weather.network.GeoApi
 import com.bumptech.glide.Glide
@@ -23,6 +24,7 @@ import com.google.android.gms.location.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import com.android.weather.R
 
 
 private const val LOCATION_PERMISSION_REQUEST = 1
@@ -35,8 +37,8 @@ class WeatherFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,8 +69,6 @@ class WeatherFragment : Fragment() {
         // Launch Kotlin Coroutine on Android's main thread
         GlobalScope.launch(Dispatchers.Main) {
             // Execute web request through coroutine call adapter & retrofit
-            //val webResponse = GeoApi.retrofitService.getGeo().await()
-
             try {
                 val webResponse = GeoApi.retrofitService.getWeatherByGps(
                     latitude, longitude,
@@ -106,11 +106,10 @@ class WeatherFragment : Fragment() {
                         myCityView.text = partList.city
 
                         Glide.with(requireContext())
-                            .load("${IMAGE_URL}${weather?.get(0)?.icon}@2x.png")
+                            .load("$IMAGE_URL${weather?.get(0)?.icon}@2x.png")
                             .into(imageView)
                     }
                 } else {
-                    // Print error information
                     Toast.makeText(context, "Error ${webResponse.code()}", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -122,7 +121,9 @@ class WeatherFragment : Fragment() {
     }
 
     private fun checkPermissions(): Boolean {
-        if (ContextCompat.checkSelfPermission(requireContext(), LOCATION_PERMISSION)
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                LOCATION_PERMISSION
+            )
             == PackageManager.PERMISSION_GRANTED
         ) {
             return true

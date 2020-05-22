@@ -1,18 +1,36 @@
 package com.android.weather
 
-import android.content.Context
-import android.content.Intent
-import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import com.android.weather.databinding.ActivityMainBinding
+import com.android.weather.fragments.HorizontalFlipTransformation
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.viewPager.adapter = ViewPagerFragmentAdapter(this)
+        binding.viewPager.setPageTransformer(HorizontalFlipTransformation())
+
+        // attaching tab mediator
+        TabLayoutMediator(binding.tabLayout, binding.viewPager,
+            TabConfigurationStrategy { tab: TabLayout.Tab, position: Int ->
+                when(position) {
+                    0 -> tab.text = getString(R.string.weather_now)
+                    1 -> tab.text = getString(R.string.weather_next)
+                }
+            }
+        ).attach()
     }
 
 }
