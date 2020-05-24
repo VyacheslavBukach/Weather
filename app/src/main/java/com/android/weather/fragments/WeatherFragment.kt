@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,8 +38,15 @@ class WeatherFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+    companion object {
+        private var _latitude: Double = 0.0
+        var latitude: Double = 0.0
+            get() = _latitude
+
+        private var _longitude: Double = 0.0
+        var longitude: Double = 0.0
+            get() = _longitude
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,11 +79,12 @@ class WeatherFragment : Fragment() {
             // Execute web request through coroutine call adapter & retrofit
             try {
                 val webResponse = GeoApi.retrofitService.getWeatherByGps(
-                    latitude, longitude,
+                    _latitude, _longitude,
                     "metric",
                     "ru",
                     "f20ee5d768c40c7094c1380400bf5a58"
                 ).await()
+                Log.i(TAG, "weatherFrag ${webResponse.message()}")
                 if (webResponse.isSuccessful) {
                     // Get the returned & parsed JSON from the web response.
                     // Type specified explicitly here to make it clear that we already
@@ -176,8 +185,8 @@ class WeatherFragment : Fragment() {
                     } else {
 //                        binding.latitudeView.text = location.latitude.toString()
 //                        binding.longitudeView.text = location.longitude.toString()
-                        latitude = location.latitude
-                        longitude = location.longitude
+                        _latitude = location.latitude
+                        _longitude = location.longitude
                         loadWeatherAndUpdate()
                     }
                 }

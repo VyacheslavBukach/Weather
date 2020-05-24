@@ -34,7 +34,7 @@ interface GeoApiInterface {
         @Query("lon") longitude: Double,
         @Query("units") format: String,
         @Query("lang") language: String,
-        @Query("APPID") appid: String): Deferred<Response<WeatherResponse>>
+        @Query("APPID") appid: String): Deferred<Response<ForecastResponse>>
 }
 
 private val moshi = Moshi.Builder()

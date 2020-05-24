@@ -22,6 +22,5 @@
     <string name="weather_now">Текущая погода</string>
     <string name="weather_next">Прогноз на 5 дней</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="date">Дата</string>
 </resources>

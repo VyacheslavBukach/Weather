@@ -46,7 +46,7 @@ data class City(
 
 @Parcelize
 data class Day(
-    @Json(name = "main") val main: List<Main>,
+    @Json(name = "main") val main: Main,
     @Json(name = "weather") val weather: List<Weather>,
     @Json(name = "wind") val wind: Wind,
     @Json(name = "dt_txt") val daytime: String

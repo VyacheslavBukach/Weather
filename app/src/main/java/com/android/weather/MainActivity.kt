@@ -2,6 +2,7 @@ package com.android.weather
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.android.weather.adapters.ViewPagerFragmentAdapter
 import com.android.weather.databinding.ActivityMainBinding
 import com.android.weather.fragments.HorizontalFlipTransformation
 import com.google.android.material.tabs.TabLayout
@@ -19,7 +20,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.viewPager.adapter = ViewPagerFragmentAdapter(this)
+        binding.viewPager.adapter =
+            ViewPagerFragmentAdapter(this)
         binding.viewPager.setPageTransformer(HorizontalFlipTransformation())
 
         // attaching tab mediator
