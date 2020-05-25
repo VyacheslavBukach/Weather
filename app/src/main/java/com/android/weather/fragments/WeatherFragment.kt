@@ -110,9 +110,9 @@ class WeatherFragment : Fragment() {
                         speedView.text = getString(
                             R.string.speed,
                             wind?.speed?.oneSignAfterDot(),
-                            getString(wind?.direction?.findDirection()!!)
+                            wind?.direction?.findDirection()?.let { getString(it) } ?: ""
                         )
-                        myCityView.text = partList.city
+                        myCityView.text = partList?.city
 
                         Glide.with(requireContext())
                             .load("$IMAGE_URL${weather?.get(0)?.icon}@2x.png")
