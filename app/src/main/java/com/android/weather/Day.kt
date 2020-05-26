@@ -1,3 +1,3 @@
 package com.android.weather
 
-data class Day(val date: String?, val temprepature: String?)
+data class Day(val date: String?, val temprepature: String?, val icon: String?)

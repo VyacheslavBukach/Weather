@@ -30,7 +30,7 @@ import com.android.weather.R
 
 private const val LOCATION_PERMISSION_REQUEST = 1
 private const val LOCATION_PERMISSION = "android.permission.ACCESS_FINE_LOCATION"
-private const val IMAGE_URL = "https://openweathermap.org/img/wn/"
+const val IMAGE_URL = "https://openweathermap.org/img/wn/"
 
 class WeatherFragment : Fragment() {
 

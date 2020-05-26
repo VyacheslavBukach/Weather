@@ -60,12 +60,14 @@ class ForecastFragment : Fragment() {
                     // get parsed contents.
                     val partList = webResponse.body()
 
-                    val city = partList?.city
                     val list = partList?.list
 
                     val data = mutableListOf<Day>()
-                    for(i in 0..39) {
-                        data.add(i, Day(list?.get(i)?.daytime, list?.get(i)?.main?.temperature.toString()))
+                    for(i in 0 until 40) {
+                        data.add(i, Day(
+                            list?.get(i)?.daytime,
+                            list?.get(i)?.main?.temperature.toString(),
+                            "$IMAGE_URL${list?.get(i)?.weather?.get(0)?.icon}@2x.png"))
                     }
 
                     binding.recyclerView.apply {
