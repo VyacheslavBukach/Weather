@@ -1,6 +1,9 @@
 package com.android.weather
 
 import java.math.BigDecimal
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 const val mmHgInhPa = 0.75006375541921
@@ -30,4 +33,17 @@ fun Double.findDirection() = when(this) {
     in 226.0..270.0 -> R.string.west
     in 271.0..315.0 -> R.string.north_west
     else -> R.string.north
+}
+
+fun parseDate(time: String?): String? {
+
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val outputFormat = SimpleDateFormat("d MMMM HH:mm")
+    try {
+        val date = inputFormat.parse(time)
+        return outputFormat.format(date)
+    }
+    catch (e : Exception) {
+        return null
+    }
 }

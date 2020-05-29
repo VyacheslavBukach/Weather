@@ -1,16 +1,17 @@
 package com.android.weather.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.weather.*
+import com.android.weather.Day
 import com.android.weather.adapters.ForecastAdapter
 import com.android.weather.databinding.FragmentForecastBinding
 import com.android.weather.network.GeoApi
+import com.android.weather.parseDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -62,17 +63,21 @@ class ForecastFragment : Fragment() {
 
                     val list = partList?.list
 
-                    val data = mutableListOf<Day>()
+                    val listOfDays = mutableListOf<Day>()
+                    var date: String?
+
                     for(i in 0 until 40) {
-                        data.add(i, Day(
-                            list?.get(i)?.daytime,
+                        date = parseDate(list?.get(i)?.daytime) ?: ""
+                        listOfDays.add(i, Day(
+                            date,
                             list?.get(i)?.main?.temperature.toString(),
-                            "$IMAGE_URL${list?.get(i)?.weather?.get(0)?.icon}@2x.png"))
+                            "$IMAGE_URL${list?.get(i)?.weather?.get(0)?.icon}@2x.png"
+                        ))
                     }
 
                     binding.recyclerView.apply {
                         layoutManager = LinearLayoutManager(activity)
-                        adapter = ForecastAdapter(data)
+                        adapter = ForecastAdapter(listOfDays)
                     }
 
                 } else {

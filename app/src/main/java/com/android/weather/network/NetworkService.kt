@@ -11,7 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-private const val BASE_URL = "https://api.openweathermap.org"
+private const val BASE_URL = "https://api.openweathermap.org/"
 
 interface GeoApiInterface {
     @GET("/data/2.5/weather?q=Grodno&APPID=f20ee5d768c40c7094c1380400bf5a58")
@@ -20,7 +20,7 @@ interface GeoApiInterface {
             Deferred<Response<WeatherResponse>>
 
 //    https://api.openweathermap.org/data/2.5/weather?lat=53.67&lon=23.85&appid=f20ee5d768c40c7094c1380400bf5a58
-    @GET("/data/2.5/weather")
+    @GET("data/2.5/weather")
     fun getWeatherByGps(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
@@ -28,7 +28,7 @@ interface GeoApiInterface {
         @Query("lang") language: String,
         @Query("APPID") appid: String): Deferred<Response<WeatherResponse>>
 
-    @GET("/data/2.5/forecast")
+    @GET("data/2.5/forecast")
     fun getForecastByGps(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
