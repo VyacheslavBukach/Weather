@@ -1,6 +1,7 @@
 package com.android.weather.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.android.weather.adapters.ForecastAdapter
 import com.android.weather.databinding.FragmentForecastBinding
 import com.android.weather.network.GeoApi
 import com.android.weather.parseDate
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,6 +24,7 @@ class ForecastFragment : Fragment() {
 
     private var _binding: FragmentForecastBinding? = null
     private val binding get() = _binding!!
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +46,9 @@ class ForecastFragment : Fragment() {
         _binding = null
     }
 
-    private fun loadWeatherAndUpdate() {
+    fun loadWeatherAndUpdate() {
         // Launch Kotlin Coroutine on Android's main thread
-        GlobalScope.launch(Dispatchers.Main) {
+        uiScope.launch {
             // Execute web request through coroutine call adapter & retrofit
             try {
                 val webResponse = GeoApi.retrofitService.getForecastByGps(
@@ -54,7 +57,7 @@ class ForecastFragment : Fragment() {
                     "ru",
                     "f20ee5d768c40c7094c1380400bf5a58"
                 ).await()
-
+                Log.i(TAG, "forecastFrag ${webResponse.message()}")
                 if (webResponse.isSuccessful) {
                     // Get the returned & parsed JSON from the web response.
                     // Type specified explicitly here to make it clear that we already

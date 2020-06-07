@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.android.weather.R
+import kotlinx.coroutines.CoroutineScope
 
 
 private const val LOCATION_PERMISSION_REQUEST = 1
@@ -36,15 +37,16 @@ class WeatherFragment : Fragment() {
 
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
-    lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     companion object {
         private var _latitude: Double = 0.0
-        var latitude: Double = 0.0
+        val latitude: Double
             get() = _latitude
 
         private var _longitude: Double = 0.0
-        var longitude: Double = 0.0
+        val longitude: Double
             get() = _longitude
     }
 
@@ -73,9 +75,9 @@ class WeatherFragment : Fragment() {
         getLastLocation()
     }
 
-    private fun loadWeatherAndUpdate() {
+    fun loadWeatherAndUpdate() {
         // Launch Kotlin Coroutine on Android's main thread
-        GlobalScope.launch(Dispatchers.Main) {
+        uiScope.launch {
             // Execute web request through coroutine call adapter & retrofit
             try {
                 val webResponse = GeoApi.retrofitService.getWeatherByGps(
@@ -185,6 +187,9 @@ class WeatherFragment : Fragment() {
                     } else {
 //                        binding.latitudeView.text = location.latitude.toString()
 //                        binding.longitudeView.text = location.longitude.toString()
+//                        val locManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//                        val w = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//                        w.latitude
                         _latitude = location.latitude
                         _longitude = location.longitude
                         loadWeatherAndUpdate()

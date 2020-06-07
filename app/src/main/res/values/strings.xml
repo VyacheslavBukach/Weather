@@ -21,6 +21,7 @@
 
     <string name="weather_now">Текущая погода</string>
     <string name="weather_next">Прогноз на 5 дней</string>
+    <string name="refresh">Обновить</string>
 
     <string name="date">Дата</string>
 </resources>
