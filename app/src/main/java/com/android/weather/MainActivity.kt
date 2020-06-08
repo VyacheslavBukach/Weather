@@ -40,16 +40,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-                R.id.refresh -> {
-                    val i = binding.viewPager.currentItem
-                    when(val fragment = supportFragmentManager.findFragmentByTag("f$i")) {
-                        is WeatherFragment -> fragment.loadWeatherAndUpdate()
-                        is ForecastFragment -> fragment.loadWeatherAndUpdate()
-                    }
-                    return true
+        when (item.itemId) {
+            R.id.refresh -> {
+                val i = binding.viewPager.currentItem
+                when (val fragment = supportFragmentManager.findFragmentByTag("f$i")) {
+                    is WeatherFragment -> fragment.loadWeatherAndUpdate()
+                    is ForecastFragment -> fragment.loadWeatherAndUpdate()
                 }
-
+                return true
+            }
+            R.id.search -> {
+                
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
