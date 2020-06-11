@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.weather.Day
 import com.android.weather.adapters.ForecastAdapter
 import com.android.weather.databinding.FragmentForecastBinding
+import com.android.weather.network.ForecastResponse
 import com.android.weather.network.GeoApi
+import com.android.weather.network.WeatherResponse
 import com.android.weather.parseDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 const val TAG = "FORECAST"
 
@@ -46,17 +49,28 @@ class ForecastFragment : Fragment() {
         _binding = null
     }
 
-    fun loadWeatherAndUpdate() {
+    fun loadWeatherAndUpdate(city: String = "") {
         // Launch Kotlin Coroutine on Android's main thread
         uiScope.launch {
             // Execute web request through coroutine call adapter & retrofit
             try {
-                val webResponse = GeoApi.retrofitService.getForecastByGps(
-                    WeatherFragment.latitude, WeatherFragment.longitude,
-                    "metric",
-                    "ru",
-                    "f20ee5d768c40c7094c1380400bf5a58"
-                ).await()
+                val webResponse: Response<ForecastResponse>
+                if(city == "") {
+                    webResponse = GeoApi.retrofitService.getForecastByGps(
+                        WeatherFragment.latitude, WeatherFragment.longitude,
+                        "metric",
+                        "ru",
+                        "f20ee5d768c40c7094c1380400bf5a58"
+                    ).await()
+                }
+                else {
+                    webResponse = GeoApi.retrofitService.getForecastByCity(
+                        city,
+                        "metric",
+                        "ru",
+                        "f20ee5d768c40c7094c1380400bf5a58"
+                    ).await()
+                }
                 Log.i(TAG, "forecastFrag ${webResponse.message()}")
                 if (webResponse.isSuccessful) {
                     // Get the returned & parsed JSON from the web response.

@@ -14,19 +14,31 @@ import retrofit2.http.Query
 private const val BASE_URL = "https://api.openweathermap.org/"
 
 interface GeoApiInterface {
-    @GET("/data/2.5/weather?q=Grodno&APPID=f20ee5d768c40c7094c1380400bf5a58")
-    fun getGeo():
-    // The Coroutine Call Adapter allows us to return a Deferred, a Job with a result
-            Deferred<Response<WeatherResponse>>
+//    https://api.openweathermap.org/data/2.5/weather?q=Grodno&APPID=f20ee5d768c40c7094c1380400bf5a58
+    @GET("/data/2.5/weather")
+    fun getWeatherByCity(
+        @Query("q") city: String,
+        @Query("units") format: String,
+        @Query("lang") language: String,
+        @Query("APPID") appid: String
+    ): Deferred<Response<WeatherResponse>>
 
-//    https://api.openweathermap.org/data/2.5/weather?lat=53.67&lon=23.85&appid=f20ee5d768c40c7094c1380400bf5a58
+    @GET("/data/2.5/forecast")
+    fun getForecastByCity(
+        @Query("q") city: String,
+        @Query("units") format: String,
+        @Query("lang") language: String,
+        @Query("APPID") appid: String
+    ): Deferred<Response<ForecastResponse>>
+
     @GET("data/2.5/weather")
     fun getWeatherByGps(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
         @Query("units") format: String,
         @Query("lang") language: String,
-        @Query("APPID") appid: String): Deferred<Response<WeatherResponse>>
+        @Query("APPID") appid: String
+    ): Deferred<Response<WeatherResponse>>
 
     @GET("data/2.5/forecast")
     fun getForecastByGps(
@@ -34,7 +46,8 @@ interface GeoApiInterface {
         @Query("lon") longitude: Double,
         @Query("units") format: String,
         @Query("lang") language: String,
-        @Query("APPID") appid: String): Deferred<Response<ForecastResponse>>
+        @Query("APPID") appid: String
+    ): Deferred<Response<ForecastResponse>>
 }
 
 private val moshi = Moshi.Builder()
@@ -48,5 +61,5 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 object GeoApi {
-    val retrofitService : GeoApiInterface by lazy { retrofit.create(GeoApiInterface::class.java) }
+    val retrofitService: GeoApiInterface by lazy { retrofit.create(GeoApiInterface::class.java) }
 }

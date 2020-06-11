@@ -26,7 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.android.weather.R
+import com.android.weather.network.WeatherResponse
 import kotlinx.coroutines.CoroutineScope
+import retrofit2.Response
 
 
 private const val LOCATION_PERMISSION_REQUEST = 1
@@ -75,17 +77,28 @@ class WeatherFragment : Fragment() {
         getLastLocation()
     }
 
-    fun loadWeatherAndUpdate() {
+    fun loadWeatherAndUpdate(city: String = "") {
         // Launch Kotlin Coroutine on Android's main thread
         uiScope.launch {
             // Execute web request through coroutine call adapter & retrofit
+            val webResponse: Response<WeatherResponse>
             try {
-                val webResponse = GeoApi.retrofitService.getWeatherByGps(
-                    _latitude, _longitude,
+                if(city == "") {
+                    webResponse = GeoApi.retrofitService.getWeatherByGps(
+                        _latitude, _longitude,
+                        "metric",
+                        "ru",
+                        "f20ee5d768c40c7094c1380400bf5a58"
+                    ).await()
+                }
+                else {
+                    webResponse = GeoApi.retrofitService.getWeatherByCity(
+                    city,
                     "metric",
                     "ru",
                     "f20ee5d768c40c7094c1380400bf5a58"
                 ).await()
+                }
                 Log.i(TAG, "weatherFrag ${webResponse.message()}")
                 if (webResponse.isSuccessful) {
                     // Get the returned & parsed JSON from the web response.

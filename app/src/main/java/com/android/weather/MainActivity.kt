@@ -1,9 +1,17 @@
 package com.android.weather
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.android.weather.adapters.ViewPagerFragmentAdapter
 import com.android.weather.databinding.ActivityMainBinding
 import com.android.weather.fragments.ForecastFragment
@@ -17,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrate
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var queryTextListener: SearchView.OnQueryTextListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // attaching tab mediator
         TabLayoutMediator(binding.tabLayout, binding.viewPager,
             TabConfigurationStrategy { tab: TabLayout.Tab, position: Int ->
-                when(position) {
+                when (position) {
                     0 -> tab.text = getString(R.string.weather_now)
                     1 -> tab.text = getString(R.string.weather_next)
                 }
@@ -41,16 +50,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.refresh -> {
-                val i = binding.viewPager.currentItem
-                when (val fragment = supportFragmentManager.findFragmentByTag("f$i")) {
-                    is WeatherFragment -> fragment.loadWeatherAndUpdate()
-                    is ForecastFragment -> fragment.loadWeatherAndUpdate()
+            R.id.action_refresh -> {
+                var fragment: Fragment
+                for(i in 0 until 2) {
+                    when(i) {
+                        0 -> {
+                            fragment = supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
+                            fragment.loadWeatherAndUpdate()
+                        }
+                        1 -> {
+                            fragment = supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
+                            fragment.loadWeatherAndUpdate()
+                        }
+                    }
                 }
                 return true
             }
-            R.id.search -> {
-                
+            R.id.action_search -> {
                 return true
             }
         }
@@ -58,7 +74,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
         menuInflater.inflate(R.menu.menu_top, menu)
+
+        val searchManager =
+            getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView =
+            menu!!.findItem(R.id.action_search).actionView as SearchView
+        val searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+        searchPlate.hint = "Введите город"
+
+        searchView.setSearchableInfo(
+            searchManager.getSearchableInfo(componentName)
+        )
+        queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                Log.i("frag", newText)
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Log.i("frag", query)
+                var fragment: Fragment
+                for(i in 0 until 2) {
+                    when(i) {
+                        0 -> {
+                            fragment = supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
+                            fragment.loadWeatherAndUpdate(query)
+                        }
+                        1 -> {
+                            fragment = supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
+                            fragment.loadWeatherAndUpdate(query)
+                        }
+                    }
+                }
+                return true
+            }
+        }
+        searchView.setOnQueryTextListener(queryTextListener)
+
         return super.onCreateOptionsMenu(menu)
     }
 }
