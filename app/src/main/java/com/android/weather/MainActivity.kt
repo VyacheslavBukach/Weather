@@ -51,16 +51,22 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_refresh -> {
-                var fragment: Fragment
-                for(i in 0 until 2) {
-                    when(i) {
+                var fragment: Fragment?
+                for (i in 0 until 2) {
+                    when (i) {
                         0 -> {
-                            fragment = supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
+                            fragment =
+                                supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
                             fragment.loadWeatherAndUpdate()
                         }
                         1 -> {
-                            fragment = supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
-                            fragment.loadWeatherAndUpdate()
+                            fragment = supportFragmentManager.findFragmentByTag("f1")
+                            if(fragment == null) return true
+                            else {
+                                fragment =
+                                    supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
+                                fragment.loadWeatherAndUpdate()
+                            }
                         }
                     }
                 }
@@ -81,7 +87,8 @@ class MainActivity : AppCompatActivity() {
             getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView =
             menu!!.findItem(R.id.action_search).actionView as SearchView
-        val searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+        val searchPlate =
+            searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
         searchPlate.hint = "Введите город"
 
         searchView.setSearchableInfo(
@@ -96,14 +103,16 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 Log.i("frag", query)
                 var fragment: Fragment
-                for(i in 0 until 2) {
-                    when(i) {
+                for (i in 0 until 2) {
+                    when (i) {
                         0 -> {
-                            fragment = supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
+                            fragment =
+                                supportFragmentManager.findFragmentByTag("f0") as WeatherFragment
                             fragment.loadWeatherAndUpdate(query)
                         }
                         1 -> {
-                            fragment = supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
+                            fragment =
+                                supportFragmentManager.findFragmentByTag("f1") as ForecastFragment
                             fragment.loadWeatherAndUpdate(query)
                         }
                     }

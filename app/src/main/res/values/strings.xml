@@ -2,7 +2,7 @@
     <string name="app_name">Weather</string>
 
     <string name="my_coordinates">Город</string>
-    <string name="get_coordinates">Получить координаты</string>
+    <string name="get_coordinates">Погода в моем городе</string>
     <string name="temperature">%1$s°С</string>
     <string name="temperature_feels_like">по ощущению %1$s°С</string>
     <string name="description">Описание</string>

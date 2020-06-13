@@ -14,6 +14,7 @@ import com.android.weather.databinding.FragmentForecastBinding
 import com.android.weather.network.ForecastResponse
 import com.android.weather.network.GeoApi
 import com.android.weather.network.WeatherResponse
+import com.android.weather.oneSignAfterDot
 import com.android.weather.parseDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -87,7 +88,7 @@ class ForecastFragment : Fragment() {
                         date = parseDate(list?.get(i)?.daytime) ?: ""
                         listOfDays.add(i, Day(
                             date,
-                            list?.get(i)?.main?.temperature.toString(),
+                            list?.get(i)?.main?.temperature?.oneSignAfterDot(),
                             "$IMAGE_URL${list?.get(i)?.weather?.get(0)?.icon}@2x.png"
                         ))
                     }
